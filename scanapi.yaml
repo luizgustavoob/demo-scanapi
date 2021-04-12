@@ -9,7 +9,7 @@ endpoints:
           - name: status_code_is_200
             assert: ${{ response.status_code == 200 }}
           - name: response_body_has_content
-            assert: ${{ response.json() != None }}
+            assert: ${{ len(response.json()) > 0 }}
         vars:
           first_bank: ${{ response.json()[0]['code'] }}
 
@@ -19,8 +19,8 @@ endpoints:
         tests:
           - name: status_code_is_200
             assert: ${{ response.status_code == 200 }}
-          - name: response_body_has_content
-            assert: ${{ response.json() != None }}
+          - name: response_body_is_valid
+            assert: ${{ 'ispb' in response.json() and 'name' in response.json() and 'code' in response.json() and 'fullName' in response.json() }}
 
       - name: get_bank_generate_404_error
         path: /banks/v1/INVALIDBANK
@@ -38,7 +38,7 @@ endpoints:
           - name: status_code_is_200
             assert: ${{ response.status_code == 200 }}
           - name: response_body_has_content
-            assert: ${{ response.json() != None }}
+            assert: ${{ len(response.json()) > 0 }}
 
       - name: get_feriados_generate_404_error
         path: /feriados/v1/1899
@@ -56,8 +56,8 @@ endpoints:
           - name: status_code_is_200
             assert: ${{ response.status_code == 200 }}
           - name: response_body_has_content
-            assert: ${{ response.json() != None }}
-          - name: count_ufs_is_28
+            assert: ${{ len(response.json()) > 0 }}
+          - name: response_body_is_valid
             assert: ${{ len(response.json()) == 27 }}
         vars:
           first_uf: ${{ response.json()[0]['sigla'] }}
@@ -68,8 +68,8 @@ endpoints:
         tests:
           - name: status_code_is_200
             assert: ${{ response.status_code == 200 }}
-          - name: response_body_has_content
-            assert: ${{ response.json() != None }}
+          - name: response_body_is_valid
+            assert: ${{ 'id' in response.json() and 'sigla' in response.json() and 'nome' in response.json() and 'regiao' in response.json() }}
 
       - name: get_uf_generate_404_error
         path: /ibge/uf/v1/INVALIDUF
@@ -87,7 +87,7 @@ endpoints:
           - name: status_code_is_200
             assert: ${{ response.status_code == 200 }}
           - name: response_body_has_content
-            assert: ${{ response.json() != None }}
+            assert: ${{ len(response.json()) > 0 }}
           - name: response_body_is_valid
             assert: ${{ response.json()['state'] == 'PR' }}
 
